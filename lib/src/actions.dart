@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'controller.dart';
 import 'slidable.dart';
 
 /// Signature for [CustomSlidableAction.onPressed].
@@ -23,6 +24,7 @@ class CustomSlidableAction extends StatelessWidget {
     this.backgroundColor = _kBackgroundColor,
     this.foregroundColor,
     this.autoClose = _kAutoClose,
+    this.dimissOnPresssed = false,
     this.borderRadius = BorderRadius.zero,
     this.padding,
     required this.onPressed,
@@ -61,6 +63,11 @@ class CustomSlidableAction extends StatelessWidget {
   /// {@endtemplate}
   final bool autoClose;
 
+  /// {@template slidable.actions.dismissOnPressed}
+  /// Should the slidable be dismissed on pressed
+  /// {@endtemplate}
+  final bool dimissOnPresssed;
+
   /// {@template slidable.actions.onPressed}
   /// Called when the action is tapped or otherwise activated.
   ///
@@ -85,11 +92,8 @@ class CustomSlidableAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveForegroundColor = foregroundColor ??
-        (ThemeData.estimateBrightnessForColor(backgroundColor) ==
-                Brightness.light
-            ? Colors.black
-            : Colors.white);
+    final effectiveForegroundColor =
+        foregroundColor ?? (ThemeData.estimateBrightnessForColor(backgroundColor) == Brightness.light ? Colors.black : Colors.white);
 
     return Expanded(
       flex: flex,
@@ -117,6 +121,9 @@ class CustomSlidableAction extends StatelessWidget {
     if (autoClose) {
       Slidable.of(context)?.close();
     }
+    if (dimissOnPresssed) {
+      Slidable.of(context)?.dismiss(ResizeRequest(const Duration(milliseconds: 300), () {}));
+    }
   }
 }
 
@@ -136,6 +143,7 @@ class SlidableAction extends StatelessWidget {
     this.backgroundColor = _kBackgroundColor,
     this.foregroundColor,
     this.autoClose = _kAutoClose,
+    this.dimissOnPresssed = false,
     required this.onPressed,
     this.icon,
     this.spacing = 4,
@@ -157,6 +165,9 @@ class SlidableAction extends StatelessWidget {
 
   /// {@macro slidable.actions.autoClose}
   final bool autoClose;
+
+  /// {@macro slidable.actions.dismissOnPressed}
+  final bool dimissOnPresssed;
 
   /// {@macro slidable.actions.onPressed}
   final SlidableActionCallback? onPressed;
@@ -221,6 +232,7 @@ class SlidableAction extends StatelessWidget {
       padding: padding,
       onPressed: onPressed,
       autoClose: autoClose,
+      dimissOnPresssed: dimissOnPresssed,
       backgroundColor: backgroundColor,
       foregroundColor: foregroundColor,
       flex: flex,
